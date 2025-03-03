@@ -15,8 +15,8 @@ MonoBehaviour:
   dialogues:
   - characterName: 'A:'
     dialogueText: qqqqqq
-  - characterName: 'B:'
-    dialogueText: hddgdgsdgsdg
+  - characterName: B:wwwww
+    dialogueText: 
   - characterName: 'A:'
     dialogueText: xxxxx
   - characterName: 'B:'
