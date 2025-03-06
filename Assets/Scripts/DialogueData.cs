@@ -13,4 +13,3 @@ public class DialogueData : ScriptableObject
 
     public List<DialogueLine> dialogues; // Diyalog listesi
 }
- 

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: DiyalogBolum1
   m_EditorClassIdentifier: 
   dialogues:
-  - characterName: 'A:'
-    dialogueText: qqqqqq
-  - characterName: B:wwwww
-    dialogueText: 
-  - characterName: 'A:'
-    dialogueText: xxxxx
-  - characterName: 'B:'
-    dialogueText: ...................
+  - characterName: A
+    dialogueText: x
+  - characterName: B
+    dialogueText: y
+  - characterName: A
+    dialogueText: z
+  - characterName: B
+    dialogueText: t

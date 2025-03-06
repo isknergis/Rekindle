@@ -1,25 +1,47 @@
-using TMPro; 
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 public class DialogueManager : MonoBehaviour
 {
-    public TextMeshProUGUI dialogueText;  // TextMeshProUGUI bileþeninin referansý.
-    public string[] dialogues; // Diyaloglar dizisi
+    public TextMeshProUGUI dialogueText;  // UI - TMP Text
+    public Button nextButton;             // UI - Buton
+    public DialogueData dialogueData;     // ScriptableObject
     private int currentDialogueIndex = 0;
+    private bool isDialogueActive = false;
 
-    // Diyalog baþlatma fonksiyonu
+    void Start()
+    {
+        nextButton.gameObject.SetActive(false); // Baþlangýçta buton gizli
+    }
+
     public void StartDialogue()
     {
-        currentDialogueIndex = 0;  // Diyalog sýrasýný sýfýrla
-        ShowNextDialogue();  // Ýlk diyalogu göster
+        currentDialogueIndex = 0;
+        isDialogueActive = true;
+        nextButton.gameObject.SetActive(true); // Butonu göster
+        ShowNextDialogue();
     }
 
-    // Bir sonraki diyaloðu gösterme fonksiyonu
     public void ShowNextDialogue()
     {
-        if (currentDialogueIndex < dialogues.Length)
+        if (!isDialogueActive) return;
+
+        if (currentDialogueIndex < dialogueData.dialogues.Count)
         {
-            dialogueText.text = dialogues[currentDialogueIndex];  // Diyalog metnini güncelle
-            currentDialogueIndex++;  // Sonraki diyaloga geç
+            dialogueText.text = $"{dialogueData.dialogues[currentDialogueIndex].characterName}: {dialogueData.dialogues[currentDialogueIndex].dialogueText}";
+            currentDialogueIndex++;
+        }
+        else
+        {
+            EndDialogue();
         }
     }
+
+    public void EndDialogue()
+    {
+        dialogueText.text = "";
+        nextButton.gameObject.SetActive(false); // Butonu gizle
+        isDialogueActive = false;
+    }
+
 }
