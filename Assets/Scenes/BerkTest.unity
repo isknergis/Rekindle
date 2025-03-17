@@ -1029,6 +1029,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1537888566079896297, guid: e1d8ba2ce463de3408627378662ce10a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 698551390}
+    - targetCorrespondingSourceObject: {fileID: 1537888566079896297, guid: e1d8ba2ce463de3408627378662ce10a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 698551393}
   m_SourcePrefab: {fileID: 100100000, guid: e1d8ba2ce463de3408627378662ce10a, type: 3}
 --- !u!4 &698551388 stripped
 Transform:
@@ -1061,6 +1064,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8822745, y: 0.88523436, z: 0.1146958}
   m_Center: {x: -0.000002861023, y: 0.0000014156103, z: -0.000000011175874}
+--- !u!114 &698551393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698551389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11d4dcddcf52f6647a4acafea100f311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &816485486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2472,6 +2487,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 91239860689022449, guid: 2bb53d7b86f251c428ddbc3297991b72, type: 3}
+      propertyPath: speed
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 1252900390985637071, guid: 2bb53d7b86f251c428ddbc3297991b72, type: 3}
       propertyPath: m_Name
       value: Laser
@@ -2482,7 +2501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2217109630915631720, guid: 2bb53d7b86f251c428ddbc3297991b72, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 414.2
+      value: 623.19995
       objectReference: {fileID: 0}
     - target: {fileID: 2217109630915631720, guid: 2bb53d7b86f251c428ddbc3297991b72, type: 3}
       propertyPath: m_LocalPosition.z
