@@ -56,7 +56,7 @@ public class PContr2 : MonoBehaviour
 
     void Jump()
     {
-        if (isGrounded && Input.GetKeyDown(KeyCode.RightControl))
+        if (isGrounded && Input.GetKeyDown(KeyCode.LeftControl))
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
         }
