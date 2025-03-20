@@ -15,26 +15,28 @@ public class PContr1 : MonoBehaviour
     public LayerMask groundLayer;
 
     private bool isGrounded = false;
+    private bool isWalking = false;
+    private bool isRunning = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-      //  animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
-        //if (animator == null)
-        //{
-        //    Debug.LogWarning("Animator bileþeni bulunamadý! Animasyonlar çalýþmayacaktýr.");
-        //}
+        if (animator == null)
+        {
+            Debug.LogWarning("Animator bileþeni bulunamadý! Animasyonlar çalýþmayacaktýr.");
+        }
     }
 
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
-        //if (animator != null)
-        //{
-        //    animator.SetBool("IsJumping", !isGrounded);
-        //}
+        if (animator != null)
+        {
+            animator.SetBool("IsJumping", !isGrounded);
+        }
 
         MovePlayer();
         Jump();
@@ -45,13 +47,21 @@ public class PContr1 : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        isWalking = moveVertical > 0; // **Sadece W tuþuna basýnca yürüsün**
+        isRunning = isWalking && Input.GetKey(KeyCode.LeftShift); // **Shift basýlýnca koþ**
+
         float speed = isRunning ? runSpeed : walkSpeed;
-
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized * speed;
-
-        // Unity'nin yeni versiyonuna uygun olarak linearVelocity kullanýldý
         rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
+
+        // **Animasyonlarý güncelle**
+        if (animator != null)
+        {
+            animator.SetBool("IsWalking", isWalking && !isRunning); // **Shift yoksa yürüsün**
+            animator.SetBool("IsRunning", isRunning); // **Shift varsa koþsun**
+        }
+
+        Debug.Log("Walking: " + isWalking + " | Running: " + isRunning);
     }
 
     void Jump()
