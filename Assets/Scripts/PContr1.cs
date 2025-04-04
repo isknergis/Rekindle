@@ -17,6 +17,7 @@ public class PContr1 : MonoBehaviour
     private bool isGrounded = false;
     private bool isWalking = false;
     private bool isRunning = false;
+    private bool isJumping = false;
 
     void Start()
     {
@@ -31,44 +32,62 @@ public class PContr1 : MonoBehaviour
 
     void Update()
     {
+        // Zemin kontrolü
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
         if (animator != null)
         {
+            // Zýplama animasyonunu kontrol et
             animator.SetBool("IsJumping", !isGrounded);
         }
 
+        // Hareket ve zýplama iþlemleri
         MovePlayer();
         Jump();
     }
 
     void MovePlayer()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+        float moveVertical = Input.GetAxisRaw("Vertical");
 
-        isWalking = moveVertical > 0; // **Sadece W tuþuna basýnca yürüsün**
-        isRunning = isWalking && Input.GetKey(KeyCode.LeftShift); // **Shift basýlýnca koþ**
+        Vector3 moveDirection = new Vector3(moveHorizontal, 0, moveVertical).normalized;
+
+        isWalking = moveDirection.magnitude > 0;  // Hareket ediyor mu?
+        isRunning = isWalking && Input.GetKey(KeyCode.LeftShift);  // Shift tuþu ile koþma
 
         float speed = isRunning ? runSpeed : walkSpeed;
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized * speed;
-        rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
+        Vector3 movement = moveDirection * speed;
 
-        // **Animasyonlarý güncelle**
-        if (animator != null)
+        // linearVelocity kullanýmý
+        rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z); // Zýplama için y'nin korunmasý
+
+        if (moveDirection != Vector3.zero)
         {
-            animator.SetBool("IsWalking", isWalking && !isRunning); // **Shift yoksa yürüsün**
-            animator.SetBool("IsRunning", isRunning); // **Shift varsa koþsun**
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);  // Yumuþak dönüþ
         }
 
-        Debug.Log("Walking: " + isWalking + " | Running: " + isRunning);
+        // Animasyon parametrelerini güncelle
+        if (animator != null)
+        {
+            // Yürüyüþ animasyonu
+            animator.SetBool("IsWalking", isWalking && !isRunning);
+
+            // Koþma animasyonu
+            animator.SetBool("IsRunning", isRunning);
+
+            Debug.Log("IsWalking: " + isWalking + " | IsRunning: " + isRunning);  // Animasyonlarýn tetiklendiðini görmek için Debug logu
+        }
     }
 
     void Jump()
     {
-        if (isGrounded && Input.GetKeyDown(KeyCode.RightControl))
+        // Zýplama iþlemi: Sol Control tuþuna basýldýðýnda zýpla
+        if (isGrounded && Input.GetKeyDown(KeyCode.LeftControl))  // Zýplama için LeftControl tuþu
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            isJumping = true;  // Zýplama baþladýðýnda true yap
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);  // Zýplama kuvvetini uygula
         }
     }
 
