@@ -17,7 +17,6 @@ public class PContr1 : MonoBehaviour
     private bool isGrounded = false;
     private bool isWalking = false;
     private bool isRunning = false;
-    private bool isJumping = false;
 
     void Start()
     {
@@ -35,13 +34,12 @@ public class PContr1 : MonoBehaviour
         // Zemin kontrolü
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
+        // Jump animasyonu (havada mý kontrolü)
         if (animator != null)
         {
-            // Zýplama animasyonunu kontrol et
             animator.SetBool("IsJumping", !isGrounded);
         }
 
-        // Hareket ve zýplama iþlemleri
         MovePlayer();
         Jump();
     }
@@ -53,41 +51,35 @@ public class PContr1 : MonoBehaviour
 
         Vector3 moveDirection = new Vector3(moveHorizontal, 0, moveVertical).normalized;
 
-        isWalking = moveDirection.magnitude > 0;  // Hareket ediyor mu?
-        isRunning = isWalking && Input.GetKey(KeyCode.LeftShift);  // Shift tuþu ile koþma
+        isWalking = moveDirection.magnitude > 0f;
+        isRunning = isWalking && Input.GetKey(KeyCode.LeftShift);
 
         float speed = isRunning ? runSpeed : walkSpeed;
         Vector3 movement = moveDirection * speed;
 
-        // linearVelocity kullanýmý
-        rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z); // Zýplama için y'nin korunmasý
+        // Rigidbody hareketini uygula (y ekseni korunarak)
+        rb.linearVelocity = new Vector3(movement.x, rb.linearVelocity.y, movement.z);
 
+        // Karakterin yönünü hareket yönüne döndür
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);  // Yumuþak dönüþ
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
 
         // Animasyon parametrelerini güncelle
         if (animator != null)
         {
-            // Yürüyüþ animasyonu
-            animator.SetBool("IsWalking", isWalking && !isRunning);
-
-            // Koþma animasyonu
-            animator.SetBool("IsRunning", isRunning);
-
-            Debug.Log("IsWalking: " + isWalking + " | IsRunning: " + isRunning);  // Animasyonlarýn tetiklendiðini görmek için Debug logu
+            animator.SetBool("IsWalking", isGrounded && isWalking && !isRunning);
+            animator.SetBool("IsRunning", isGrounded && isRunning);
         }
     }
 
     void Jump()
     {
-        // Zýplama iþlemi: Sol Control tuþuna basýldýðýnda zýpla
-        if (isGrounded && Input.GetKeyDown(KeyCode.LeftControl))  // Zýplama için LeftControl tuþu
+        if (isGrounded && Input.GetKeyDown(KeyCode.LeftControl))
         {
-            isJumping = true;  // Zýplama baþladýðýnda true yap
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);  // Zýplama kuvvetini uygula
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
         }
     }
 
